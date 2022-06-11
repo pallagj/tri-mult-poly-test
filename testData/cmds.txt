@@ -1,0 +1,11 @@
+hopf (min total area):
+
+	TMP.exe hopf 1 1 1 0 0 0 1 0
+
+monkey (min total dihedral angles):
+
+	TMP.exe monkey 1 1 0 0 1 0 1 0
+
+monkeyWave (min total dihedral angles, including boundary normals):
+
+	TMP.exe monkeyWave 1 1 0 0 1 0 1 1
