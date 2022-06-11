@@ -11,12 +11,14 @@ HEADERS = MyWindow.h MyViewer.h MyViewer.hpp \
     gorbe-algoritmusok.h \
     bsplinecurve.h \
     vector.h \
-    coonssurface.h
+    coonssurface.h \
+    curve.h
 SOURCES = MyWindow.cpp MyViewer.cpp main.cpp jet-wrapper.cpp \
     gorbe-algoritmusok.cc \
     bsplinecurve.cpp \
     vector.cpp \
-    coonssurface.cpp
+    coonssurface.cpp \
+    curve.cpp
 
 QMAKE_CXXFLAGS += -O3
 

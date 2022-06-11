@@ -7,9 +7,10 @@
 #include <OpenMesh/Core/Mesh/TriMesh_ArrayKernelT.hh>
 
 #include "coonssurface.h"
+#include "curve.h"
 
 using qglviewer::Vec;
-enum class ModelType { NONE, MESH, BEZIER_SURFACE, COONS_SURFACE };
+enum class ModelType { NONE, MESH, BEZIER_SURFACE, COONS_SURFACE, CURVE };
 
 class MyViewer : public QGLViewer {
   Q_OBJECT
@@ -35,6 +36,9 @@ public:
   //Coons
   bool openCoons(const std::string &filename, bool update_view = true);
   bool saveCoons(const std::string &filename);
+
+  //Curve
+  bool openCurve(const std::string &filename, bool update_view = true);
 
   ModelType getModelType() const;
 
@@ -88,6 +92,7 @@ private:
     Vec meanMapColor(double d) const;
     Vec accurateMeanMapColor(double u, double v) const;
     void drawControlNet() const;
+    void drawCurves() const;
     void drawCoonsControlNet() const;
     void drawAxes() const;
     void drawAxesWithNames() const;
@@ -112,6 +117,9 @@ private:
 
     //Coons
     CoonsSurface coons;
+
+    //Curve
+    Curve curve;
 
 
 

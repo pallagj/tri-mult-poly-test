@@ -67,10 +67,11 @@ MyWindow::~MyWindow() {
 void MyWindow::open() {
   auto filename =
     QFileDialog::getOpenFileName(this, tr("Open File"), last_directory,
-                                 tr("Readable files (*.obj *.ply *.stl *.bzr *.cns);;"
+                                 tr("Readable files (*.obj *.ply *.stl *.bzr *.cns *.curve);;"
                                     "Mesh (*.obj *.ply *.stl);;"
                                     "Bézier surface (*.bzr);;"
                                     "Coons surface (*.cns);;"
+                                    "Curve (*.curve);;"
                                     "All files (*.*)"));
   if(filename.isEmpty())
     return;
@@ -81,6 +82,8 @@ void MyWindow::open() {
     ok = viewer->openBezier(filename.toUtf8().data());
   else if (filename.endsWith(".cns"))
     ok = viewer->openCoons(filename.toUtf8().data());
+  else if (filename.endsWith(".curve"))
+    ok = viewer->openCurve(filename.toUtf8().data());
   else
     ok = viewer->openMesh(filename.toUtf8().data());
 

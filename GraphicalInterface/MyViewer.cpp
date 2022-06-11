@@ -387,11 +387,24 @@ void MyViewer::updateMesh(bool update_mean_range) {
 void MyViewer::setupCamera() {
   // Set camera on the model
   Vector box_min, box_max;
-  box_min = box_max = mesh.point(*mesh.vertices_begin());
-  for (auto v : mesh.vertices()) {
-    box_min.minimize(mesh.point(v));
-    box_max.maximize(mesh.point(v));
+
+  if(ModelType::CURVE == model_type) {
+      box_min = box_max = Vector{curve.polygons[0][0].x, curve.polygons[0][0].y, curve.polygons[0][0].z};
+      for (auto p : curve.polygons) {
+          for(auto v: p){
+              box_min.minimize(Vector{v.x, v.y, v.z});
+              box_max.maximize(Vector{v.x, v.y, v.z});
+          }
+      }
+  } else {
+      box_min = box_max = mesh.point(*mesh.vertices_begin());
+      for (auto v : mesh.vertices()) {
+        box_min.minimize(mesh.point(v));
+        box_max.maximize(mesh.point(v));
+      }
   }
+
+
   camera()->setSceneBoundingBox(Vec(box_min.data()), Vec(box_max.data()));
   camera()->showEntireScene();
 
@@ -503,6 +516,51 @@ bool MyViewer::saveCoons(const std::string &filename) {
   return true;
 }
 
+
+
+bool MyViewer::openCurve(const std::string &filename, bool update_view) {
+  size_t numberOfPoygons;
+  size_t numberOfVertices;
+
+  curve.clean();
+
+  try {
+    std::ifstream f(filename.c_str());
+    f.exceptions(std::ios::failbit | std::ios::badbit);
+
+    f >> numberOfPoygons;
+    f >> numberOfVertices;
+
+    curve.setNumberOfPolygons(numberOfPoygons);
+
+    for(int index=0; index < numberOfPoygons; index++) {
+        size_t numberOfPolygonVertices;
+
+        f >> numberOfPolygonVertices;
+
+        for(int i=0; i< numberOfPolygonVertices; i++) {
+            double x, y, z;
+
+            f >> x >> y >> z;
+
+            curve.addPoint(index, x, y, z);
+        }
+    }
+
+
+  } catch(std::ifstream::failure &) {
+    return false;
+  }
+
+  model_type = ModelType::CURVE;
+  last_filename = filename;
+  //updateMesh(update_view);
+  if (update_view)
+    setupCamera();
+
+  return true;
+}
+
 ModelType MyViewer::getModelType() const{
     return model_type;
 }
@@ -546,11 +604,15 @@ void MyViewer::draw() {
   if ((model_type == ModelType::COONS_SURFACE) && show_control_points)
     drawCoonsControlNet();
 
+  if(model_type == ModelType::CURVE)
+    drawCurves();
+
+
   glPolygonMode(GL_FRONT_AND_BACK, !show_solid && show_wireframe ? GL_LINE : GL_FILL);
   glEnable(GL_POLYGON_OFFSET_FILL);
   glPolygonOffset(1, 1);
 
-  if (show_solid || show_wireframe) {
+  if ((show_solid || show_wireframe) && model_type != ModelType::CURVE) {
     if (visualization == Visualization::PLAIN || visualization == Visualization::ALMOSTBOUNDARY)
       glColor3d(1.0, 1.0, 1.0);
     else if (visualization == Visualization::ISOPHOTES) {
@@ -619,6 +681,36 @@ void MyViewer::draw() {
 
   if (axes.shown)
     drawAxes();
+}
+
+void MyViewer::drawCurves() const {
+  glDisable(GL_LIGHTING);
+  glLineWidth(3.0);
+  glColor3d(0.3, 0.3, 1.0);
+
+  for(auto& p  : curve.polygons){
+      glBegin(GL_LINE_STRIP);
+
+      for(auto& v : p){
+          glVertex3dv(Vec{v.x, v.y, v.z});
+      }
+
+      glEnd();
+  }
+
+  glLineWidth(1.0);
+  glPointSize(8.0);
+  glColor3d(1.0, 0.0, 1.0);
+  glBegin(GL_POINTS);
+
+  for(auto& p  : curve.polygons){
+      for(auto& v : p){
+          glVertex3dv(Vec{v.x, v.y, v.z});
+      }
+  }
+  glEnd();
+  glPointSize(1.0);
+  glEnable(GL_LIGHTING);
 }
 
 void MyViewer::drawControlNet() const {
@@ -832,14 +924,15 @@ void MyViewer::keyPressEvent(QKeyEvent *e) {
       show_wireframe = !show_wireframe;
       update();
       break;
-    case Qt::Key_F:
-      fairMesh();
+    case Qt::Key_X:
+      if(model_type != ModelType::CURVE) break;
+      last_filename =  last_filename.replace(last_filename.end()-6, last_filename.end(), "_dyn.obj");
+      model_type = ModelType::MESH;
+      openMesh(last_filename, true);
       update();
       break;
-    case Qt::Key_X:
-      visualization = Visualization::ALMOSTBOUNDARY;
-      vertexBoundary = !vertexBoundary;
-      updateMesh();
+    case Qt::Key_F:
+      fairMesh();
       update();
       break;
     default:
