@@ -1,6 +1,6 @@
 #ifndef _DMWT_H_
 #define _DMWT_H_
-#include "tetgen.h"
+#include "tatgen.h"
 #include "Point3.h"
 #include "Vector3.h"
 #include "CurveInfo.h"

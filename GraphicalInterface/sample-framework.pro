@@ -12,13 +12,59 @@ HEADERS = MyWindow.h MyViewer.h MyViewer.hpp \
     bsplinecurve.h \
     vector.h \
     coonssurface.h \
-    curve.h
+    curve.h \
+    External/DMWT/Algorithm/DMWT.h \
+    External/DMWT/DataStructure/Boundary.h \
+    External/DMWT/DataStructure/CurveInfo.h \
+    External/DMWT/DataStructure/EdgeInfo.h \
+    External/DMWT/DataStructure/Hole.h \
+    External/DMWT/DataStructure/SubKey.h \
+    External/DMWT/DataStructure/Tile.h \
+    External/DMWT/DataStructure/TriangleInfo.h \
+    External/DMWT/Utility/Configure.h \
+    External/DMWT/Utility/Point3.h \
+    External/DMWT/Utility/Vector3.h \
+    External/ExternalLibs/tetgen/tetgen1.4.3/inc/tetgen.h \
+    External/ExternalLibs/tetgen/tetgen1.4.3/src/tetgen.h \
+    bsplinecurve.h \
+    coons_copy.h \
+    coonssurface.h \
+    curve.h \
+    gorbe-algoritmusok.h \
+    jet-wrapper.h \
+    MyViewer.h \
+    MyViewer.hpp \
+    MyWindow.h \
+    vector.h
 SOURCES = MyWindow.cpp MyViewer.cpp main.cpp jet-wrapper.cpp \
     gorbe-algoritmusok.cc \
     bsplinecurve.cpp \
     vector.cpp \
     coonssurface.cpp \
-    curve.cpp
+    curve.cpp \
+    External/DMWT/Algorithm/DMWT.cpp \
+    External/DMWT/DataStructure/Boundary.cpp \
+    External/DMWT/DataStructure/CurveInfo.cpp \
+    External/DMWT/DataStructure/EdgeInfo.cpp \
+    External/DMWT/DataStructure/Hole.cpp \
+    External/DMWT/DataStructure/Tile.cpp \
+    External/DMWT/DataStructure/TriangleInfo.cpp \
+    External/DMWT/Utility/Point3.cpp \
+    External/DMWT/Utility/Vector3.cpp \
+    External/ExternalLibs/tetgen/tetgen1.4.3/src/predicates.cxx \
+    External/ExternalLibs/tetgen/tetgen1.4.3/src/tetgen.cxx \
+    External/ExternalLibs/tetgen/tetgen1.4.3/test/example_tetcall.cxx \
+    External/ExternalLibs/tetgen/tetgen1.4.3/test/tetcall.cxx \
+    bsplinecurve.cpp \
+    coonssurface.cpp \
+    curve.cpp \
+    gorbe-algoritmusok.cc \
+    gorbe-kiertekeles.cc \
+    jet-wrapper.cpp \
+    main.cpp \
+    MyViewer.cpp \
+    MyWindow.cpp \
+    vector.cpp
 
 QMAKE_CXXFLAGS += -O3
 
